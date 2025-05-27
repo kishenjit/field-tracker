@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Field Team Follow-up Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background-color: #ffffff;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    header img {
+      height: 60px;
+    }
+    header h1 {
+      margin: 0;
+      color: #333;
+    }
+    form {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-bottom: 20px;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+    th {
+      background-color: #efefef;
+    }
+    button {
+      padding: 10px;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1b5e20;
+    }
+    #weeklySummary {
+      background-color: #fff;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="KisanKraft Logo">
+  <h1>Field Team Follow-up Tracker</h1>
+</header>
+
+<form id="dataForm">
+  <label>Date: <input type="date" id="date" required></label>
+  <label>Name of the Executive: <input type="text" id="executive" required></label>
+  <label>Location: <input type="text" id="location" required></label>
+  <label>Fields Visited: <input type="number" id="visited" required></label>
+  <label>Fields Finalised: <input type="number" id="finalised" required></label>
+  <label>Recommendation:
+    <select id="recommendation">
+      <option value="Proceed">Proceed</option>
+      <option value="Hold">Hold</option>
+      <option value="Drop">Drop</option>
+    </select>
+  </label>
+  <label>Comments: <input type="text" id="comments"></label>
+  <button type="submit">Add Entry</button>
+</form>
+
+<h3>Data Table</h3>
+<table id="dataTable">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Executive</th>
+      <th>Location</th>
+      <th>Fields Visited</th>
+      <th>Fields Finalised</th>
+      <th>Recommendation</th>
+      <th>Comments</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<br>
+<button onclick="exportToCSV()">Export to CSV</button>
+
+<h3>Weekly Summary</h3>
+<div id="weeklySummary"></div>
+
+<script>
+  const data = [];
+
+  function getWeek(dateStr) {
+    const date = new Date(dateStr);
+    const yearStart = new Date(date.getFullYear(), 0, 1);
+    const weekNo = Math.ceil((((date - yearStart) / 86400000) + yearStart.getDay() + 1) / 7);
+    return `${date.getFullYear()}-W${weekNo}`;
+  }
+
+  document.getElementById('dataForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const entry = {
+      date: document.getElementById('date').value,
+      executive: document.getElementById('executive').value,
+      location: document.getElementById('location').value,
+      visited: parseInt(document.getElementById('visited').value),
+      finalised: parseInt(document.getElementById('finalised').value),
+      recommendation: document.getElementById('recommendation').value,
+      comments: document.getElementById('comments').value,
+    };
+
+    data.push(entry);
+    updateTable();
+    updateWeeklySummary();
+    this.reset();
+  });
+
+  function updateTable() {
+    const tbody = document.querySelector('#dataTable tbody');
+    tbody.innerHTML = '';
+    data.forEach(d => {
+      const row = `<tr>
+        <td>${d.date}</td>
+        <td>${d.executive}</td>
+        <td>${d.location}</td>
+        <td>${d.visited}</td>
+        <td>${d.finalised}</td>
+        <td>${d.recommendation}</td>
+        <td>${d.comments}</td>
+      </tr>`;
+      tbody.insertAdjacentHTML('beforeend', row);
+    });
+  }
+
+  function updateWeeklySummary() {
+    const summary = {};
+
+    data.forEach(d => {
+      const week = getWeek(d.date);
+      if (!summary[week]) {
+        summary[week] = {
+          visited: 0,
+          finalised: 0,
+          recommendations: { Proceed: 0, Hold: 0, Drop: 0 }
+        };
+      }
+      summary[week].visited += d.visited;
+      summary[week].finalised += d.finalised;
+      summary[week].recommendations[d.recommendation]++;
+    });
+
+    const summaryDiv = document.getElementById('weeklySummary');
+    summaryDiv.innerHTML = '';
+
+    for (const [week, stats] of Object.entries(summary)) {
+      summaryDiv.innerHTML += `
+        <h4>${week}</h4>
+        <p><strong>Total Fields Visited:</strong> ${stats.visited}</p>
+        <p><strong>Total Fields Finalised:</strong> ${stats.finalised}</p>
+        <p><strong>Recommendations:</strong> Proceed: ${stats.recommendations.Proceed}, Hold: ${stats.recommendations.Hold}, Drop: ${stats.recommendations.Drop}</p>
+      `;
+    }
+  }
+
+  function exportToCSV() {
+    let csv = 'Date,Executive,Location,Fields Visited,Fields Finalised,Recommendation,Comments\n';
+    data.forEach(d => {
+      csv += `${d.date},${d.executive},${d.location},${d.visited},${d.finalised},${d.recommendation},${d.comments}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'field_team_data.csv');
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    alert("CSV file has been downloaded!");
+  }
+</script>
+
+</body>
+</html>
