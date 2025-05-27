@@ -68,6 +68,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover {
+      transform: scale(1.05);
     }
 
     .logo-container img {
@@ -377,8 +383,8 @@
       <h1>Field Activity Tracker</h1>
       <p>KisanKraft Ltd., Bengaluru</p>
     </div>
-    <div class="logo-container">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffd700;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ffed4a;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='15' fill='%23000000'/%3E%3Cpath d='M20 60 Q30 50 40 55 Q50 60 60 50 Q70 40 80 45' stroke='url(%23grad)' stroke-width='3' fill='none'/%3E%3Cellipse cx='25' cy='58' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='35' cy='53' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='45' cy='57' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='55' cy='52' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='65' cy='48' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='75' cy='43' rx='4' ry='2' fill='url(%23grad)'/%3E%3Ctext x='50' y='25' text-anchor='middle' fill='white' font-family='serif' font-size='14' font-weight='bold'%3EKisan%3C/text%3E%3Ctext x='50' y='80' text-anchor='middle' fill='url(%23grad)' font-family='serif' font-size='12' font-weight='bold'%3EKraft%3C/text%3E%3C/svg%3E" alt="Kisan Kraft Logo" />
+    <div class="logo-container" onclick="window.open('https://www.kisankraft.com', '_blank')">
+      <img src="logo.png" alt="Kisan Kraft Logo" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%23ffd700;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23ffed4a;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=\'100\' height=\'100\' rx=\'15\' fill=\'%23000000\'/%3E%3Cpath d=\'M20 60 Q30 50 40 55 Q50 60 60 50 Q70 40 80 45\' stroke=\'url(%23grad)\' stroke-width=\'3\' fill=\'none\'/%3E%3Cellipse cx=\'25\' cy=\'58\' rx=\'4\' ry=\'2\' fill=\'url(%23grad)\'/%3E%3Cellipse cx=\'35\' cy=\'53\' rx=\'4\' ry=\'2\' fill=\'url(%23grad)\'/%3E%3Cellipse cx=\'45\' cy=\'57\' rx=\'4\' ry=\'2\' fill=\'url(%23grad)\'/%3E%3Cellipse cx=\'55\' cy=\'52\' rx=\'4\' ry=\'2\' fill=\'url(%23grad)\'/%3E%3Cellipse cx=\'65\' cy=\'48\' rx=\'4\' ry=\'2\' fill=\'url(%23grad)\'/%3E%3Cellipse cx=\'75\' cy=\'43\' rx=\'4\' ry=\'2\' fill=\'url(%23grad)\'/%3E%3Ctext x=\'50\' y=\'25\' text-anchor=\'middle\' fill=\'white\' font-family=\'serif\' font-size=\'14\' font-weight=\'bold\'%3EKisan%3C/text%3E%3Ctext x=\'50\' y=\'80\' text-anchor=\'middle\' fill=\'url(%23grad)\' font-family=\'serif\' font-size=\'12\' font-weight=\'bold\'%3EKraft%3C/text%3E%3C/svg%3E'">
     </div>
   </header>
 
@@ -516,8 +522,20 @@
 </div>
 
 <script>
-  let data = [];
+  // Initialize data from localStorage if available
+  let data = JSON.parse(localStorage.getItem('fieldActivityData')) || [];
   let editingIndex = -1;
+
+  // Load data when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    updateTable();
+    updateSummaryCards();
+    updateExecutiveList();
+    
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = today;
+  });
 
   function getWeek(dateStr) {
     const date = new Date(dateStr);
@@ -556,7 +574,7 @@
     datalist.innerHTML = executives.map(exec => `<option value="${exec}">`).join('');
   }
 
-  document.getElementById('dataForm').addEventListener('submit', function (e) {
+  document.getElementById('dataForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const selectedTasks = Array.from(document.querySelectorAll('input[name="tasks"]:checked')).map(cb => cb.value);
 
@@ -579,10 +597,17 @@
       data.push(entry);
     }
 
+    // Save to localStorage
+    localStorage.setItem('fieldActivityData', JSON.stringify(data));
+    
     updateTable();
     updateSummaryCards();
     updateExecutiveList();
     this.reset();
+    
+    // Reset date to today after submission
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = today;
   });
 
   function updateTable() {
@@ -633,6 +658,8 @@
   function deleteEntry(index) {
     if (confirm('Are you sure you want to delete this entry?')) {
       data.splice(index, 1);
+      // Update localStorage
+      localStorage.setItem('fieldActivityData', JSON.stringify(data));
       updateTable();
       updateSummaryCards();
       updateExecutiveList();
@@ -750,6 +777,20 @@
     alert('💡 Bulk Entry Tips:\n\n1. Use the Executive Name dropdown for consistency\n2. Copy similar entries and modify details\n3. Use Tab key to navigate between fields quickly\n4. Date format: YYYY-MM-DD\n5. Save frequently to avoid data loss');
   }
 
+  function downloadCSV(csv, filename) {
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   function exportToCSV() {
     if (data.length === 0) {
       alert('No data to export!');
@@ -778,4 +819,25 @@
         };
       }
       summary[key].visited += d.visited;
-      summary[
+      summary[key].km += d.km;
+      summary[key].taskCount += d.tasks.length;
+    });
+
+    if (Object.keys(summary).length === 0) {
+      alert('No summary data to export!');
+      return;
+    }
+    
+    let csv = 'Week,Executive Name,Fields Visited,Kilometers Covered,Tasks Completed,Performance Index,Rating\n';
+    Object.entries(summary).forEach(([_, stats]) => {
+      const performanceIndex = calculatePerformanceIndex(stats.visited, stats.taskCount, stats.km);
+      const performanceLabel = getPerformanceLabel(performanceIndex);
+      
+      csv += `${stats.week},"${stats.executive}",${stats.visited},${stats.km.toFixed(1)},${stats.taskCount},${performanceIndex},"${performanceLabel}"\n`;
+    });
+    
+    downloadCSV(csv, 'field_activity_summary.csv');
+  }
+</script>
+</body>
+</html>
