@@ -1,219 +1,781 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Field Team Follow-up Tracker</title>
+  <title>Field Activity Tracker - Kisan Kraft</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f9f9f9;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
     header {
+      background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .header-content {
+      flex: 1;
+    }
+
+    .header-content h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(45deg, #ffd700, #ffed4a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-content p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .logo-container {
+      width: 100px;
+      height: 100px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      background: white;
       display: flex;
       align-items: center;
-      gap: 15px;
-      background-color: #ffffff;
-      padding: 10px 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
+      justify-content: center;
     }
-    header img {
-      height: 60px;
+
+    .logo-container img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
     }
-    header h1 {
-      margin: 0;
-      color: #333;
+
+    .main-content {
+      padding: 40px;
     }
-    form {
-      background-color: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+
+    .form-section {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .form-section h2 {
+      color: #2d3748;
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+      border-bottom: 3px solid #ffd700;
+      padding-bottom: 10px;
+      display: inline-block;
+    }
+
+    .form-grid {
       display: grid;
-      gap: 10px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      margin-bottom: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 25px;
     }
-    label {
+
+    .form-group {
       display: flex;
       flex-direction: column;
     }
+
+    .form-group label {
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f7fafc;
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: #ffd700;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background: #f7fafc;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .checkbox-item:hover {
+      background: #edf2f7;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn-export {
+      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+      color: white;
+    }
+
+    .btn-export:hover {
+      background: linear-gradient(135deg, #dd6b20 0%, #c05621 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .table-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .table-header {
+      background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-header h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+      background: white;
     }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-    }
+
     th {
-      background-color: #efefef;
+      background: #f7fafc;
+      color: #2d3748;
+      font-weight: 600;
+      padding: 15px 12px;
+      text-align: left;
+      border-bottom: 2px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-    button {
-      padding: 10px;
-      background-color: #2e7d32;
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #4a5568;
+    }
+
+    tr:hover {
+      background: #f7fafc;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .summary-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
-    button:hover {
-      background-color: #1b5e20;
+
+    .summary-card h4 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      font-weight: 700;
     }
-    #weeklySummary {
-      background-color: #fff;
-      padding: 15px;
+
+    .summary-card p {
+      opacity: 0.9;
+      font-size: 1rem;
+    }
+
+    .performance-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .performance-excellent {
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      color: white;
+    }
+
+    .performance-good {
+      background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+      color: white;
+    }
+
+    .performance-average {
+      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+      color: white;
+    }
+
+    .performance-poor {
+      background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+      color: white;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
       margin-top: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .stats-note {
+      background: #e6fffa;
+      border-left: 4px solid #38b2ac;
+      padding: 15px 20px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 20px;
+    }
+
+    .stats-note strong {
+      color: #2d3748;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        border-radius: 15px;
+      }
+      
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <img src="Logo.png" alt="KisanKraft Logo">
-  <h1>Field Team Follow-up Tracker</h1>
-</header>
+<div class="container">
+  <header>
+    <div class="header-content">
+      <h1>Field Activity Tracker</h1>
+      <p>KisanKraft Ltd., Bengaluru</p>
+    </div>
+    <div class="logo-container">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffd700;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ffed4a;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='15' fill='%23000000'/%3E%3Cpath d='M20 60 Q30 50 40 55 Q50 60 60 50 Q70 40 80 45' stroke='url(%23grad)' stroke-width='3' fill='none'/%3E%3Cellipse cx='25' cy='58' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='35' cy='53' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='45' cy='57' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='55' cy='52' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='65' cy='48' rx='4' ry='2' fill='url(%23grad)'/%3E%3Cellipse cx='75' cy='43' rx='4' ry='2' fill='url(%23grad)'/%3E%3Ctext x='50' y='25' text-anchor='middle' fill='white' font-family='serif' font-size='14' font-weight='bold'%3EKisan%3C/text%3E%3Ctext x='50' y='80' text-anchor='middle' fill='url(%23grad)' font-family='serif' font-size='12' font-weight='bold'%3EKraft%3C/text%3E%3C/svg%3E" alt="Kisan Kraft Logo" />
+    </div>
+  </header>
 
-<form id="dataForm">
-  <label>Date: <input type="date" id="date" required></label>
-  <label>Name of the Executive: <input type="text" id="executive" required></label>
-  <label>Location: <input type="text" id="location" required></label>
-  <label>Fields Visited: <input type="number" id="visited" required></label>
-  <label>Fields Finalised: <input type="number" id="finalised" required></label>
-  <label>Recommendation:
-    <select id="recommendation">
-      <option value="Proceed">Proceed</option>
-      <option value="Hold">Hold</option>
-      <option value="Drop">Drop</option>
-    </select>
-  </label>
-  <label>Comments: <input type="text" id="comments"></label>
-  <button type="submit">Add Entry</button>
-</form>
+  <div class="main-content">
+    <!-- Data Entry Form -->
+    <div class="form-section">
+      <h2>📊 Field Activity Entry</h2>
+      <form id="dataForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="date">📅 Date</label>
+            <input type="date" id="date" required>
+          </div>
+          <div class="form-group">
+            <label for="executive">👤 Executive Name</label>
+            <input type="text" id="executive" required list="executiveList">
+            <datalist id="executiveList"></datalist>
+          </div>
+          <div class="form-group">
+            <label for="location">📍 Location</label>
+            <input type="text" id="location" required>
+          </div>
+          <div class="form-group">
+            <label for="state">🗺️ State</label>
+            <input type="text" id="state" required>
+          </div>
+          <div class="form-group">
+            <label for="visited">🏠 Fields Visited</label>
+            <input type="number" id="visited" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="km">🚗 Kilometers Covered</label>
+            <input type="number" id="km" min="0" step="0.1" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>✅ Tasks Completed</label>
+          <div class="checkbox-grid">
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Meeting with Farmer" id="task1">
+              <label for="task1">Meeting with Farmer</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Field observation" id="task2">
+              <label for="task2">Field Observation</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Sowing" id="task3">
+              <label for="task3">Sowing</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Weeding" id="task4">
+              <label for="task4">Weeding</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Data Collection" id="task5">
+              <label for="task5">Data Collection</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Harvesting" id="task6">
+              <label for="task6">Harvesting</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Stakeholder Visit" id="task7">
+              <label for="task7">Stakeholder Visit</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Training Session" id="task8">
+              <label for="task8">Training Session</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Equipment Demo" id="task9">
+              <label for="task9">Equipment Demo</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" name="tasks" value="Other Work" id="task10">
+              <label for="task10">Other Work</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="comments">💬 Observations/Comments</label>
+          <textarea id="comments" rows="3" placeholder="Enter your observations and comments here..."></textarea>
+        </div>
+        
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">➕ Add Entry</button>
+          <button type="button" class="btn btn-secondary" onclick="bulkEntryMode()">📋 Bulk Entry Mode</button>
+        </div>
+      </form>
+    </div>
 
-<h3>Data Table</h3>
-<table id="dataTable">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Executive</th>
-      <th>Location</th>
-      <th>Fields Visited</th>
-      <th>Fields Finalised</th>
-      <th>Recommendation</th>
-      <th>Comments</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+    <!-- Field Activity Table -->
+    <div class="table-container">
+      <div class="table-header">
+        <h3>📋 Field Activity Records</h3>
+        <button class="btn btn-export" onclick="exportToCSV()">📤 Export to CSV</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Executive</th>
+              <th>Location</th>
+              <th>State</th>
+              <th>Fields Visited</th>
+              <th>Tasks Completed</th>
+              <th>Kilometers</th>
+              <th>Comments</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
 
-<br>
-<button onclick="exportToCSV()">Export to CSV</button>
-
-<h3>Weekly Summary</h3>
-<div id="weeklySummary"></div>
+    <!-- Weekly Summary Section -->
+    <div class="form-section">
+      <h2>📊 Executive Performance Dashboard</h2>
+      <div class="summary-grid" id="summaryCards"></div>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="generateWeeklySummary()">📈 Generate Weekly Summary</button>
+        <button class="btn btn-export" onclick="exportSummaryToCSV()">📤 Export Summary</button>
+      </div>
+      <div id="weeklySummary"></div>
+      <div class="stats-note">
+        <strong>Performance Index Calculation:</strong> The performance index is calculated on a 10-point scale based on fields visited, tasks completed, and kilometers covered. The scoring criteria: Excellent (8.5-10), Good (7-8.4), Average (5-6.9), Poor (<5).
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  const data = [];
+  let data = [];
+  let editingIndex = -1;
 
   function getWeek(dateStr) {
     const date = new Date(dateStr);
     const yearStart = new Date(date.getFullYear(), 0, 1);
     const weekNo = Math.ceil((((date - yearStart) / 86400000) + yearStart.getDay() + 1) / 7);
-    return `${date.getFullYear()}-W${weekNo}`;
+    return `${date.getFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+  }
+
+  function calculatePerformanceIndex(visited, taskCount, km) {
+    // Normalize values for 10-point scale
+    const visitedScore = Math.min(visited * 0.5, 4); // Max 4 points for fields
+    const taskScore = Math.min(taskCount * 0.4, 3); // Max 3 points for tasks
+    const kmScore = Math.min(km * 0.03, 3); // Max 3 points for kilometers
+    
+    const totalScore = visitedScore + taskScore + kmScore;
+    return Math.min(totalScore, 10).toFixed(1);
+  }
+
+  function getPerformanceClass(score) {
+    if (score >= 8.5) return 'performance-excellent';
+    if (score >= 7) return 'performance-good';
+    if (score >= 5) return 'performance-average';
+    return 'performance-poor';
+  }
+
+  function getPerformanceLabel(score) {
+    if (score >= 8.5) return 'Excellent';
+    if (score >= 7) return 'Good';
+    if (score >= 5) return 'Average';
+    return 'Needs Improvement';
+  }
+
+  function updateExecutiveList() {
+    const executives = [...new Set(data.map(d => d.executive))];
+    const datalist = document.getElementById('executiveList');
+    datalist.innerHTML = executives.map(exec => `<option value="${exec}">`).join('');
   }
 
   document.getElementById('dataForm').addEventListener('submit', function (e) {
     e.preventDefault();
+    const selectedTasks = Array.from(document.querySelectorAll('input[name="tasks"]:checked')).map(cb => cb.value);
 
     const entry = {
       date: document.getElementById('date').value,
       executive: document.getElementById('executive').value,
       location: document.getElementById('location').value,
+      state: document.getElementById('state').value,
       visited: parseInt(document.getElementById('visited').value),
-      finalised: parseInt(document.getElementById('finalised').value),
-      recommendation: document.getElementById('recommendation').value,
+      tasks: selectedTasks,
+      km: parseFloat(document.getElementById('km').value),
       comments: document.getElementById('comments').value,
     };
 
-    data.push(entry);
+    if (editingIndex >= 0) {
+      data[editingIndex] = entry;
+      editingIndex = -1;
+      document.querySelector('button[type="submit"]').textContent = '➕ Add Entry';
+    } else {
+      data.push(entry);
+    }
+
     updateTable();
-    updateWeeklySummary();
+    updateSummaryCards();
+    updateExecutiveList();
     this.reset();
   });
 
   function updateTable() {
     const tbody = document.querySelector('#dataTable tbody');
     tbody.innerHTML = '';
-    data.forEach(d => {
+    data.forEach((d, index) => {
       const row = `<tr>
-        <td>${d.date}</td>
-        <td>${d.executive}</td>
+        <td>${new Date(d.date).toLocaleDateString()}</td>
+        <td><strong>${d.executive}</strong></td>
         <td>${d.location}</td>
-        <td>${d.visited}</td>
-        <td>${d.finalised}</td>
-        <td>${d.recommendation}</td>
+        <td>${d.state}</td>
+        <td><span class="performance-badge performance-good">${d.visited}</span></td>
+        <td>${d.tasks.join(', ')}</td>
+        <td>${d.km} km</td>
         <td>${d.comments}</td>
+        <td>
+          <button onclick="editEntry(${index})" style="background:#4299e1;color:white;border:none;padding:5px 10px;border-radius:5px;margin-right:5px;cursor:pointer;">✏️</button>
+          <button onclick="deleteEntry(${index})" style="background:#e53e3e;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">🗑️</button>
+        </td>
       </tr>`;
       tbody.insertAdjacentHTML('beforeend', row);
     });
   }
 
-  function updateWeeklySummary() {
-    const summary = {};
-
-    data.forEach(d => {
-      const week = getWeek(d.date);
-      if (!summary[week]) {
-        summary[week] = {
-          visited: 0,
-          finalised: 0,
-          recommendations: { Proceed: 0, Hold: 0, Drop: 0 }
-        };
-      }
-      summary[week].visited += d.visited;
-      summary[week].finalised += d.finalised;
-      summary[week].recommendations[d.recommendation]++;
+  function editEntry(index) {
+    const entry = data[index];
+    document.getElementById('date').value = entry.date;
+    document.getElementById('executive').value = entry.executive;
+    document.getElementById('location').value = entry.location;
+    document.getElementById('state').value = entry.state;
+    document.getElementById('visited').value = entry.visited;
+    document.getElementById('km').value = entry.km;
+    document.getElementById('comments').value = entry.comments;
+    
+    // Clear all checkboxes first
+    document.querySelectorAll('input[name="tasks"]').forEach(cb => cb.checked = false);
+    // Check the relevant boxes
+    entry.tasks.forEach(task => {
+      const checkbox = document.querySelector(`input[name="tasks"][value="${task}"]`);
+      if (checkbox) checkbox.checked = true;
     });
+    
+    editingIndex = index;
+    document.querySelector('button[type="submit"]').textContent = '✏️ Update Entry';
+    document.getElementById('dataForm').scrollIntoView({behavior: 'smooth'});
+  }
 
-    const summaryDiv = document.getElementById('weeklySummary');
-    summaryDiv.innerHTML = '';
-
-    for (const [week, stats] of Object.entries(summary)) {
-      summaryDiv.innerHTML += `
-        <h4>${week}</h4>
-        <p><strong>Total Fields Visited:</strong> ${stats.visited}</p>
-        <p><strong>Total Fields Finalised:</strong> ${stats.finalised}</p>
-        <p><strong>Recommendations:</strong> Proceed: ${stats.recommendations.Proceed}, Hold: ${stats.recommendations.Hold}, Drop: ${stats.recommendations.Drop}</p>
-      `;
+  function deleteEntry(index) {
+    if (confirm('Are you sure you want to delete this entry?')) {
+      data.splice(index, 1);
+      updateTable();
+      updateSummaryCards();
+      updateExecutiveList();
     }
   }
 
-  function exportToCSV() {
-    let csv = 'Date,Executive,Location,Fields Visited,Fields Finalised,Recommendation,Comments\n';
+  function updateSummaryCards() {
+    const summary = {};
+    let totalEntries = data.length;
+    let totalFields = 0;
+    let totalKm = 0;
+    
     data.forEach(d => {
-      csv += `${d.date},${d.executive},${d.location},${d.visited},${d.finalised},${d.recommendation},${d.comments}\n`;
+      totalFields += d.visited;
+      totalKm += d.km;
+      
+      if (!summary[d.executive]) {
+        summary[d.executive] = { visited: 0, km: 0, taskCount: 0, entries: 0 };
+      }
+      summary[d.executive].visited += d.visited;
+      summary[d.executive].km += d.km;
+      summary[d.executive].taskCount += d.tasks.length;
+      summary[d.executive].entries += 1;
     });
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'field_team_data.csv');
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    alert("CSV file has been downloaded!");
+    const summaryCards = document.getElementById('summaryCards');
+    summaryCards.innerHTML = `
+      <div class="summary-card">
+        <h4>${totalEntries}</h4>
+        <p>Total Entries</p>
+      </div>
+      <div class="summary-card">
+        <h4>${totalFields}</h4>
+        <p>Total Fields Visited</p>
+      </div>
+      <div class="summary-card">
+        <h4>${totalKm.toFixed(1)}</h4>
+        <p>Total Kilometers</p>
+      </div>
+      <div class="summary-card">
+        <h4>${Object.keys(summary).length}</h4>
+        <p>Active Executives</p>
+      </div>
+    `;
   }
-</script>
 
-</body>
-</html>
+  function generateWeeklySummary() {
+    const summary = {};
+    data.forEach(d => {
+      const week = getWeek(d.date);
+      const key = `${week}-${d.executive}`;
+      if (!summary[key]) {
+        summary[key] = {
+          week,
+          executive: d.executive,
+          visited: 0,
+          km: 0,
+          taskCount: 0
+        };
+      }
+      summary[key].visited += d.visited;
+      summary[key].km += d.km;
+      summary[key].taskCount += d.tasks.length;
+    });
+
+    const summaryDiv = document.getElementById('weeklySummary');
+    
+    if (Object.keys(summary).length === 0) {
+      summaryDiv.innerHTML = '<div class="table-container"><div style="padding:40px;text-align:center;color:#718096;">No data available for weekly summary</div></div>';
+      return;
+    }
+
+    summaryDiv.innerHTML = `
+      <div class="table-container" style="margin-top: 20px;">
+        <div class="table-header">
+          <h3>📊 Weekly Performance Summary</h3>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Week</th>
+                <th>Executive Name</th>
+                <th>Fields Visited</th>
+                <th>Kilometers Covered</th>
+                <th>Tasks Completed</th>
+                <th>Performance Index</th>
+                <th>Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${Object.entries(summary).map(([_, stats]) => {
+                const performanceIndex = parseFloat(calculatePerformanceIndex(stats.visited, stats.taskCount, stats.km));
+                const performanceClass = getPerformanceClass(performanceIndex);
+                const performanceLabel = getPerformanceLabel(performanceIndex);
+                
+                return `<tr>
+                  <td><strong>${stats.week}</strong></td>
+                  <td>${stats.executive}</td>
+                  <td><span class="performance-badge performance-good">${stats.visited}</span></td>
+                  <td>${stats.km.toFixed(1)} km</td>
+                  <td><span class="performance-badge performance-good">${stats.taskCount}</span></td>
+                  <td><strong>${performanceIndex}/10</strong></td>
+                  <td><span class="performance-badge ${performanceClass}">${performanceLabel}</span></td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  function bulkEntryMode() {
+    alert('💡 Bulk Entry Tips:\n\n1. Use the Executive Name dropdown for consistency\n2. Copy similar entries and modify details\n3. Use Tab key to navigate between fields quickly\n4. Date format: YYYY-MM-DD\n5. Save frequently to avoid data loss');
+  }
+
+  function exportToCSV() {
+    if (data.length === 0) {
+      alert('No data to export!');
+      return;
+    }
+    
+    let csv = 'Date,Executive Name,Location,State,Fields Visited,Tasks Completed,Kilometers Covered,Comments\n';
+    data.forEach(d => {
+      csv += `${d.date},"${d.executive}","${d.location}","${d.state}",${d.visited},"${d.tasks.join('; ')}",${d.km},"${d.comments}"\n`;
+    });
+    downloadCSV(csv, 'field_activity_data.csv');
+  }
+
+  function exportSummaryToCSV() {
+    const summary = {};
+    data.forEach(d => {
+      const week = getWeek(d.date);
+      const key = `${week}-${d.executive}`;
+      if (!summary[key]) {
+        summary[key] = {
+          week,
+          executive: d.executive,
+          visited: 0,
+          km: 0,
+          taskCount: 0
+        };
+      }
+      summary[key].visited += d.visited;
+      summary[
